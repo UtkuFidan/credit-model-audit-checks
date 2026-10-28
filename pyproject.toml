@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "credit-model-audit-checks"
+version = "0.2.0"
+description = "Independent re-performance checks for credit-risk scorecards: stability, discrimination, calibration, ratings, overrides, data quality, challenger benchmark."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Utku Fidan" }]
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scipy>=1.11",
+    "scikit-learn>=1.4",
+    "matplotlib>=3.8",
+    "pyyaml>=6",
+]
+
+[project.optional-dependencies]
+data = ["xlrd>=2.0.1"]
+model = ["optbinning>=0.19", "lightgbm>=4.3", "optuna>=3.6"]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+model-audit = "model_audit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 110
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

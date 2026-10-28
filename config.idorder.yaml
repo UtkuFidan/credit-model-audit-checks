@@ -1,0 +1,17 @@
+# Ordered holdout: development = first half of the file by ID, monitoring = second half.
+# Nothing is injected. Any shift the checks report is in the data as published.
+seed: 42
+data:
+  path: data/raw/taiwan_default.csv
+split:
+  mode: id_order
+scorecard:
+  features: [LIMIT_BAL, AGE, PAY_0, PAY_2, PAY_3, PAY_4, PAY_5, PAY_6,
+             PAY_RATIO, UTIL_AVG, PAY6_RATIO, PAY_AMT_LIM, BILL_TREND]
+drift:
+  enabled: false
+overrides:
+  enabled: false
+output:
+  report: reports/idorder/model_audit_report.md
+  figures_dir: reports/idorder/figures

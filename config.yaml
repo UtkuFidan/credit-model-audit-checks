@@ -1,0 +1,41 @@
+# Default configuration. Every key is optional; see src/model_audit/config.py for defaults.
+seed: 42
+data:
+  path: data/raw/taiwan_default.csv   # created by `model-audit download` (not committed)
+  id_col: ID
+  target_col: DEFAULT
+split:
+  dev_fraction: 0.5
+scorecard:
+  features: [LIMIT_BAL, AGE, PAY_0, PAY_2, PAY_3, PAY_4, PAY_5, PAY_6,
+             PAY_RATIO, UTIL_AVG, PAY6_RATIO, PAY_AMT_LIM, BILL_TREND]
+  binning: optbinning   # exact optimal binning, monotone event rate; "builtin" needs no extras
+  C: null               # null = tune C and the L1/L2 mix by 5-fold CV log loss
+  cv_folds: 5
+  calibrate_pd: true    # cubic logistic score-to-PD map fitted on development data
+  base_score: 600
+  base_odds: 50      # good:bad odds at the base score
+  pdo: 20            # points to double the odds
+drift:               # deliberate, documented perturbations of the monitoring sample
+  enabled: true
+  high_limit_cut: 200000
+  high_limit_drop_prob: 0.8
+  pay_amt_factor: 0.6
+  label_deterioration_frac: 0.05
+  missing_pay_amt1_frac: 0.03
+  age_sentinel_frac: 0.003
+  duplicate_ids: 20
+challenger:
+  enabled: true
+  n_trials: 40        # Optuna TPE trials, 5-fold CV log loss
+  n_splits: 5
+overrides:
+  enabled: true
+  cutoff_percentile: 25
+  low_side_prob: 0.18
+  high_side_prob: 0.02
+bootstrap:
+  n_boot: 500
+output:
+  report: reports/model_audit_report.md
+  figures_dir: docs
